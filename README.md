@@ -14,34 +14,79 @@
 
 <!-- scitex-badges:start -->
 <p align="center">
-  <a href="https://pypi.org/project/scitex-events/"><img src="https://img.shields.io/pypi/v/scitex-events.svg" alt="PyPI"></a>
-  <a href="https://pypi.org/project/scitex-events/"><img src="https://img.shields.io/pypi/pyversions/scitex-events.svg" alt="Python"></a>
-  <a href="https://github.com/ywatanabe1989/scitex-events/actions/workflows/test.yml"><img src="https://github.com/ywatanabe1989/scitex-events/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
-  <a href="https://codecov.io/gh/ywatanabe1989/scitex-events"><img src="https://codecov.io/gh/ywatanabe1989/scitex-events/graph/badge.svg" alt="Coverage"></a>
-  <a href="https://scitex-events.readthedocs.io/en/latest/"><img src="https://readthedocs.org/projects/scitex-events/badge/?version=latest" alt="Docs"></a>
-  <a href="https://www.gnu.org/licenses/agpl-3.0"><img src="https://img.shields.io/badge/license-AGPL_v3-blue.svg" alt="License: AGPL v3"></a>
+  <a href="https://pypi.org/project/scitex-events/"><img src="https://img.shields.io/pypi/v/scitex-events?label=pypi" alt="pypi"></a>
+  <a href="https://pypi.org/project/scitex-events/"><img src="https://img.shields.io/pypi/pyversions/scitex-events?label=python" alt="python"></a>
+  <a href="https://github.com/scitex-ai/scitex-events/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/scitex-ai/scitex-events/ci.yml?branch=develop&label=docs" alt="docs"></a>
+  <a href="https://scitex-events.readthedocs.io/en/latest/"><img src="https://img.shields.io/readthedocs/scitex-events?label=docs" alt="docs-rtd"></a>
+</p>
+<p align="center">
+  <a href="https://github.com/scitex-ai/scitex-events/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/scitex-ai/scitex-events/ci.yml?branch=develop&label=tests" alt="tests"></a>
+  <a href="https://github.com/scitex-ai/scitex-events/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/scitex-ai/scitex-events/ci.yml?branch=develop&label=install-check" alt="install-check"></a>
+  <a href="https://codecov.io/gh/scitex-ai/scitex-events"><img src="https://img.shields.io/codecov/c/github/scitex-ai/scitex-events/develop?label=cov" alt="cov"></a>
 </p>
 <!-- scitex-badges:end -->
 
 ---
 
+## Quick Start
+
+```python
+import scitex_events as ev
+
+ev.emit("test_complete", project="figrecipe", status="success",
+        payload={"exit_code": 0, "module": "stats"})
+
+ev.latest("test_complete")     # most recent event of this type
+list(ev.history(limit=20))     # recent history
+```
+
+## Demo
+
+```mermaid
+flowchart LR
+    Producer[ev.emit] --> JSONL[(JSONL store)]
+    JSONL --> Latest[ev.latest]
+    JSONL --> History[ev.history]
+    JSONL -. optional .-> Webhook[Cloud webhook]
+```
+
+<p align="center"><sub><b>Figure 1.</b> Demo path. One emit call lands in the JSONL store and is immediately readable via latest/history.</sub></p>
+
 ## Installation
 
 ```bash
-pip install scitex-events
+uv pip install "scitex-events[all]"
 ```
 
+<details>
+<summary><b>Per-module extras</b></summary>
+
+<br>
+
+| Extra | Pulls in |
+|---|---|
+| `all` | `dev` + `docs` (recommended) |
+| `dev` | pytest, pytest-cov, pytest-timeout, ruff |
+| `docs` | Sphinx + RTD theme + myst-parser (docs build only) |
+
+```bash
+uv pip install -e ".[dev]"               # editable install for contributors
+```
+
+</details>
 ## Architecture
 
+```mermaid
+flowchart LR
+    Emit[ev.emit] --> Schema[_schema.Event]
+    Schema --> Store[(JSONL store)]
+    Store --> Latest[ev.latest]
+    Store --> History[ev.history]
+    Store -. optional .-> Webhook[webhook delivery]
+    Registry[_types registry] --> Info[ev.list_types / get_type_info]
 ```
-scitex-events/
-├── src/scitex_events/
-│   ├── _emit.py         # write event to JSONL store
-│   ├── _history.py      # latest / history / list_types
-│   ├── _schemas.py      # event-type registry
-│   └── _webhook.py      # optional cloud forwarder
-└── tests/
-```
+
+<p align="center"><sub><b>Figure 2.</b> Event flow. Emission validates against the schema, appends to the local JSONL store, and fans out to readers plus an optional webhook.</sub></p>
 
 ## 1 Interfaces
 
@@ -68,38 +113,19 @@ ev.list_types()
 ev.get_type_info("test_complete")
 ```
 
-Events are stored locally as JSON-Lines files (override path via `SCITEX_EVENTS_DIR`)
-and can optionally be forwarded to a cloud webhook.
+Events are stored locally as JSON-Lines files under `~/.scitex/events/runtime/`
+(resolved via `local_state.runtime_path("events")`) and can optionally be forwarded
+to a cloud webhook.
 
 </details>
 
-## Demo
-
-```mermaid
-flowchart LR
-    Producer[ev.emit] --> JSONL[(JSONL store)]
-    JSONL --> Latest[ev.latest]
-    JSONL --> History[ev.history]
-    JSONL -. optional .-> Webhook[Cloud webhook]
-```
-
-## Quick Start
-
-```python
-import scitex_events as ev
-
-ev.emit("test_complete", project="figrecipe", status="success",
-        payload={"exit_code": 0, "module": "stats"})
-
-ev.latest("test_complete")     # most recent event of this type
-list(ev.history(limit=20))     # recent history
-```
-
 ## Status
 
-Standalone fork of `scitex.events`. Pure stdlib — zero runtime deps. The
-umbrella package's `scitex.events` import path is preserved via a
-`sys.modules`-alias bridge so existing code continues to work.
+Standalone fork of `scitex.events`. Pure stdlib — zero runtime deps except
+`scitex-config` (canonical local-state directory resolver per the SciTeX
+local-state directories skill). The umbrella package's `scitex.events` import
+path is preserved via a `sys.modules`-alias bridge so existing code continues
+to work.
 
 ## Part of SciTeX
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scitex_events._emit &mdash; scitex-events 0.1.5 documentation</title>
+  <title>scitex_events._emit &mdash; scitex-events 0.1.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=59fadc99"></script>
+      <script src="../../_static/documentation_options.js?v=6e0256f3"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,7 +92,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">._schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
 
-<span class="n">_MAX_HISTORY_LINES</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">_MAX_HISTORY_LINES</span> <span class="o">=</span> <span class="mi">1_000</span>
 <span class="n">_DEFAULT_API_URL</span> <span class="o">=</span> <span class="s2">&quot;https://scitex.ai/api/events/&quot;</span>
 
 
@@ -107,8 +107,8 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Event</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit an event to state file and optional webhook.</span>
 
-<span class="sd">    Always writes to ~/.scitex/events/{type}_latest.json.</span>
-<span class="sd">    Also appends to ~/.scitex/events/history.jsonl.</span>
+<span class="sd">    Always writes to ~/.scitex/events/runtime/{type}_latest.json.</span>
+<span class="sd">    Also appends to ~/.scitex/events/runtime/history.jsonl.</span>
 <span class="sd">    If SCITEX_API_KEY is set, POSTs to the cloud API (best-effort).</span>
 
 <span class="sd">    Parameters</span>
@@ -215,7 +215,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_events_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get or create ~/.scitex/events/ directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get runtime events directory (resolved via local_state.runtime_path).&quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">local_state</span><span class="o">.</span><span class="n">runtime_path</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
     <span class="n">d</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d</span>

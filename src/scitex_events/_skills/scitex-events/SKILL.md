@@ -1,13 +1,13 @@
 ---
 name: scitex-events
 description: |
-  [WHAT] Lightweight in-process event-bus for SciTeX scripts — subscribe/emit with typed payloads, no external broker.
+  [WHAT] Lightweight file-backed event bus for SciTeX scripts — emit, latest, history with typed payloads, no external broker.
   [WHEN] Decoupling cross-module signals (progress, lifecycle, error) inside a single Python process.
-  [HOW] `from scitex_events import bus` or `scitex-events --help`.
+  [HOW] `from scitex_events import emit, latest, history`.
 primary_interface: python
 interfaces:
   python: 3
-  cli: 1
+  cli: 0
   mcp: 0
   skills: 2
   hook: 0
@@ -15,7 +15,7 @@ interfaces:
 tags: [scitex-events]
 ---
 
-> **Interfaces:** Python ⭐⭐⭐ (primary) · CLI ⭐ · Skills ⭐⭐ · HTTP ⭐
+> **Interfaces:** Python ⭐⭐⭐ (primary) · Skills ⭐⭐ · HTTP ⭐
 
 # scitex-events
 
@@ -40,7 +40,7 @@ ev.emit("test_complete", project="figrecipe",
 # Read
 ev.latest("test_complete")
 list(ev.history(limit=20))
-list(ev.history(type="test_complete", limit=20))
+# history does not accept a type= kwarg; use latest(type) instead
 
 # Schema introspection
 ev.list_types()

@@ -1,8 +1,8 @@
 scitex-events
 =============
 
-Small linear-algebra helpers (distance, geometric median, cosine, nannorm)
-extracted from the SciTeX ecosystem as a standalone package.
+General-purpose async event bus (file-backed, JSON Lines) — standalone module
+from the SciTeX ecosystem.
 
 .. toctree::
    :maxdepth: 2

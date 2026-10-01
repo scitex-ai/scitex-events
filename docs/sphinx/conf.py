@@ -34,8 +34,8 @@ autodoc_default_options = {
     "exclude-members": "__weakref__,__init__,__dict__,__module__",
 }
 
-# Heavy/optional deps mocked so RTD can build without installing them.
-autodoc_mock_imports = [""]
+# Mock scitex-config so RTD can build without installing it.
+autodoc_mock_imports = ["scitex_config"]
 
 autosummary_generate = True
 
