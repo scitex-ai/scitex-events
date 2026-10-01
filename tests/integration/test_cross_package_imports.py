@@ -30,7 +30,7 @@ CROSS_PACKAGE_IMPORTS = [
 def test_cross_package_module_imports_without_attribute_error(module_name):
     """Importing scitex-events's declared cross-package dependency must succeed."""
     # Arrange
-    pytest.importorskip(module_name)
+    pytest.importorskip(module_name.split(".")[0])
     # Act
     module = importlib.import_module(module_name)
     # Assert

@@ -66,9 +66,17 @@ scitex_events = ["_skills/**/*.md", "_sphinx_html/**"]
 [project.entry-points."scitex_dev.skills"]
 scitex-events = "scitex_events"
 
+[tool.scitex_dev]
+no_cli = true
+no_e2e = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--disable-warnings"]
+markers = [
+    "smoke: fast subprocess-driven CLI happy-path tests",
+    "e2e: slow end-to-end workflows against real subsystems (RUN_E2E=1)",
+]
 
 [tool.coverage.run]
 parallel = true
