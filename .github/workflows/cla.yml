@@ -1,5 +1,7 @@
 name: CLA Assistant
 
+# Retain trusted main contributor policy with centralized CLA storage.
+# Pass only the secret declared by this untrusted-trigger workflow.
 on:
   issue_comment:
     types: [created]
@@ -16,11 +18,6 @@ jobs:
   call:
     uses: scitex-ai/.github/.github/workflows/cla.yml@main
     with:
-      owner_allowlist: "bot*,ywatanabe1989,LLEmacs"
-    # NAMED SECRET, not `secrets: inherit`. This caller fires on
-    # `issue_comment` and `pull_request_target`, both of which an
-    # UNAUTHENTICATED outsider can trigger on a public repo, so `inherit`
-    # would forward EVERY secret this repository holds into a job a stranger
-    # caused to run. Pass ONLY the one secret the callee declares.
+      owner_allowlist: "bot*,ywatanabe1989"
     secrets:
       GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}

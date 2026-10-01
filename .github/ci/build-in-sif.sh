@@ -32,7 +32,7 @@ export LC_ALL=C.UTF-8 LANG=C.UTF-8
 # NOT resolve inside the container). Node-local /tmp is writable + ephemeral.
 TMPDIR="/tmp/build-scitex_events-${GITHUB_RUN_ID:-0}-${GITHUB_RUN_ATTEMPT:-0}-$V"
 export TMPDIR
-rm -rf "$TMPDIR"
+rm -rf "${TMPDIR:?}"
 mkdir -p "$TMPDIR/site" "$TMPDIR/uv-cache"
 
 # The compute-node $HOME is RO inside the container — point every cache the
