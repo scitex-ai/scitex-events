@@ -16,7 +16,7 @@ jobs:
   call:
     uses: scitex-ai/.github/.github/workflows/cla.yml@main
     with:
-      owner_allowlist: "bot*,ywatanabe1989,LLEmacs"
+      owner_allowlist: "bot*,ywatanabe1989"
     # NAMED SECRET, not `secrets: inherit`. This caller fires on
     # `issue_comment` and `pull_request_target`, both of which an
     # UNAUTHENTICATED outsider can trigger on a public repo, so `inherit`
