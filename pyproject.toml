@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scitex-events"
-version = "0.1.6"
+version = "0.1.7"
 description = "General-purpose async event bus (file-backed, JSON Lines) — standalone module from the SciTeX ecosystem"
 readme = "README.md"
 license = "AGPL-3.0-only"
