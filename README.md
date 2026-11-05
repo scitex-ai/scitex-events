@@ -40,6 +40,11 @@ ev.latest("test_complete")     # most recent event of this type
 list(ev.history(limit=20))     # recent history
 ```
 
+Event types are nonempty filename components, such as `test_complete` or
+`stage-2.result`. Path separators, Windows drive prefixes, `.`/`..` and NUL
+are rejected before state access. Unicode names remain supported.
+
+
 ## Demo
 
 ```mermaid
