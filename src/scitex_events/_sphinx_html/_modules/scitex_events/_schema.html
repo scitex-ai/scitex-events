@@ -5,15 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scitex_events._schema &mdash; scitex-events 0.1.6 documentation</title>
+  <title>scitex_events._schema &mdash; scitex-events 0.1.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6e0256f3"></script>
+      <script src="../../_static/documentation_options.js?v=22607128"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -79,12 +80,13 @@
 <span class="c1"># Timestamp: 2026-02-14</span>
 <span class="c1"># File: scitex/events/_schema.py</span>
 
-<span class="sd">&quot;&quot;&quot;Event schema for the SciTeX event bus.&quot;&quot;&quot;</span>
+<span class="sd">"""Event schema for the SciTeX event bus."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">PureWindowsPath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 
@@ -92,40 +94,41 @@
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.Event">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A single event in the SciTeX event bus.</span>
+<span class="w">    </span><span class="sd">"""A single event in the SciTeX event bus.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    type : str</span>
-<span class="sd">        Event type (e.g., &quot;test_complete&quot;, &quot;job_done&quot;, &quot;build_result&quot;).</span>
+<span class="sd">        Event type (e.g., "test_complete", "job_done", "build_result").</span>
 <span class="sd">    project : str</span>
 <span class="sd">        Project name this event belongs to.</span>
 <span class="sd">    status : str</span>
-<span class="sd">        Outcome: &quot;success&quot; or &quot;failure&quot;.</span>
+<span class="sd">        Outcome: "success" or "failure".</span>
 <span class="sd">    payload : dict</span>
 <span class="sd">        Arbitrary data specific to the event type.</span>
 <span class="sd">    source : str</span>
-<span class="sd">        Where the event originated: &quot;local&quot;, &quot;hpc&quot;, &quot;ci&quot;.</span>
+<span class="sd">        Where the event originated: "local", "hpc", "ci".</span>
 <span class="sd">    timestamp : str</span>
 <span class="sd">        ISO-format timestamp, auto-generated if not provided.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">project</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;success&quot;</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"success"</span>
     <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span>
-    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"local"</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and set defaults.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Validate and set defaults."""</span>
+        <span class="n">_validate_event_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Event.to_dict">
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.Event.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to JSON-serializable dictionary.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert to JSON-serializable dictionary."""</span>
         <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
@@ -133,17 +136,33 @@
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.Event.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Event</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create Event from dictionary.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create Event from dictionary."""</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="nb">type</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
-            <span class="n">project</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
-            <span class="n">status</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
-            <span class="n">payload</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;payload&quot;</span><span class="p">,</span> <span class="p">{}),</span>
-            <span class="n">source</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;local&quot;</span><span class="p">),</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"type"</span><span class="p">],</span>
+            <span class="n">project</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"project"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"status"</span><span class="p">,</span> <span class="s2">"unknown"</span><span class="p">),</span>
+            <span class="n">payload</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"source"</span><span class="p">,</span> <span class="s2">"local"</span><span class="p">),</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"timestamp"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
         <span class="p">)</span></div>
 </div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_event_type</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Require one filename component before using an event type as state key."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Event type must be a string"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">value</span>
+        <span class="ow">or</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">".."</span><span class="p">}</span>
+        <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">char</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span><span class="p">))</span>
+        <span class="ow">or</span> <span class="n">PureWindowsPath</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">drive</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"Event type must be a nonempty filename component without "</span>
+            <span class="s2">"path separators, a drive prefix or NUL"</span>
+        <span class="p">)</span>
 
 
 <span class="c1"># EOF</span>

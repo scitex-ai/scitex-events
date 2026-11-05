@@ -1,8 +1,8 @@
 ---
 name: scitex-events
 description: |
-  [WHAT] Lightweight file-backed event bus for SciTeX scripts — emit, latest, history with typed payloads, no external broker.
-  [WHEN] Decoupling cross-module signals (progress, lifecycle, error) inside a single Python process.
+  [WHAT] Lightweight file-backed event bus for SciTeX scripts — emit, latest, history with structured payloads, no external broker.
+  [WHEN] Exchanging file-backed progress, lifecycle and result notifications between scripts.
   [HOW] `from scitex_events import emit, latest, history`.
 primary_interface: python
 interfaces:
@@ -11,16 +11,17 @@ interfaces:
   mcp: 0
   skills: 2
   hook: 0
-  http: 1
+  http: 0
 tags: [scitex-events]
 ---
 
-> **Interfaces:** Python ⭐⭐⭐ (primary) · Skills ⭐⭐ · HTTP ⭐
+> **Interfaces:** Python ⭐⭐⭐ (primary) · Skills ⭐⭐
 
 # scitex-events
 
-Standalone async event bus for SciTeX. Zero-dep core; optional webhook
-forwarder.
+Standalone file-backed event bus for SciTeX, using `scitex-config` for state
+paths. Python API and installed skills are provided; the package does not host
+a CLI, MCP server or Web API. Its optional webhook is outbound delivery.
 
 ## Why
 
@@ -50,6 +51,9 @@ ev.get_type_info("test_complete")
 Events persist under `local_state.runtime_path("events", ...)` and are
 forwarded if `SCITEX_API_KEY` is set. Define types via `Event` for the
 schema-driven flow.
+
+Event types are filename components; read [Python API](03_python-api.md) for
+the identifier validation applied before local state access.
 
 ## When to use
 

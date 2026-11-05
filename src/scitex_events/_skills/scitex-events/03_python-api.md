@@ -9,7 +9,7 @@ tags: [scitex-events-python-api]
 # Python API
 
 ```python
-from scitex_events import emit, latest, history, list_types, get_type_info
+import scitex_events as ev
 ```
 
 ## emit(event_type, project, status="success", payload=None, source="local") -> Event
@@ -21,7 +21,12 @@ ev.emit("build_result", project="my-paper", status="failure",
         payload={"doc_type": "latex", "errors": ["missing.bib"]})
 ```
 
-Returns an `Event` dataclass instance.
+Returns an `Event` dataclass instance. Event types must be nonempty filename
+components: `test_complete`, `stage-2.result` and Unicode names are supported.
+Path separators, drive prefixes, `.`/`..` and NUL raise `ValueError` before
+creating state. Non-string types raise `TypeError`. `latest(event_type)` applies
+the same validation before accessing state; `latest()` still selects the most
+recent event across all types.
 
 ## latest(event_type=None) -> dict | None
 
