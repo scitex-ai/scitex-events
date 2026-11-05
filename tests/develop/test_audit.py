@@ -5,6 +5,7 @@ after upgrading scitex-dev to refresh any pin in [dev].
 """
 
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -25,6 +26,6 @@ def test_ecosystem_audit_all_reports_clean_for_package():
     # Act
     # `audit_all_for_package` raises AssertionError on non-zero exit;
     # returning None means the audit was clean.
-    result = audit_all_for_package('scitex-events')
+    result = audit_all_for_package("scitex-events", path=Path(__file__).resolve().parents[2])
     # Assert
     assert result is None

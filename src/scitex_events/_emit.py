@@ -13,7 +13,7 @@ from typing import Any
 
 from scitex_config._ecosystem import local_state
 
-from ._schema import Event
+from ._schema import Event, _validate_event_type
 
 _MAX_HISTORY_LINES = 1_000
 _DEFAULT_API_URL = "https://scitex.ai/api/events/"
@@ -35,7 +35,8 @@ def emit(
     Parameters
     ----------
     event_type : str
-        Event type (e.g., "test_complete").
+        A nonempty filename component (e.g., "test_complete"); path separators,
+        drive prefixes and NUL are rejected before state is created.
     project : str
         Project name.
     status : str
@@ -72,13 +73,16 @@ def latest(event_type: str | None = None) -> dict[str, Any] | None:
     ----------
     event_type : str, optional
         If given, read the latest event of this type.
-        If None, read the most recent event across all types.
+        If None, read the most recent event across all types. Path-shaped types
+        are rejected before accessing state.
 
     Returns
     -------
     dict or None
         Event data, or None if no events found.
     """
+    if event_type is not None:
+        _validate_event_type(event_type)
     events_dir = _events_dir()
     if not events_dir.exists():
         return None
@@ -137,6 +141,7 @@ def _events_dir() -> Path:
 
 def _write_state_file(event: Event) -> None:
     """Write per-type latest state file."""
+    _validate_event_type(event.type)
     events_dir = _events_dir()
     state_file = events_dir / f"{event.type}_latest.json"
     state_file.write_text(

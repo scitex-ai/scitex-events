@@ -7,6 +7,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Validate event type identifiers before local state reads or writes; reject
+  path-shaped values while preserving Unicode and normal dotted names.
+
 ## [0.1.7] - 2026-10-02
 
 - Correct file-backed event API documentation and verify declared cross-package imports.

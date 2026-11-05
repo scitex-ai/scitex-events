@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from pathlib import PureWindowsPath
 from typing import Any
 
 
@@ -40,6 +41,7 @@ class Event:
 
     def __post_init__(self):
         """Validate and set defaults."""
+        _validate_event_type(self.type)
         if not self.timestamp:
             self.timestamp = datetime.now().isoformat()
 
@@ -57,6 +59,22 @@ class Event:
             payload=data.get("payload", {}),
             source=data.get("source", "local"),
             timestamp=data.get("timestamp", ""),
+        )
+
+
+def _validate_event_type(value: str) -> None:
+    """Require one filename component before using an event type as state key."""
+    if not isinstance(value, str):
+        raise TypeError("Event type must be a string")
+    if (
+        not value
+        or value in {".", ".."}
+        or any(char in value for char in ("/", "\\", "\x00"))
+        or PureWindowsPath(value).drive
+    ):
+        raise ValueError(
+            "Event type must be a nonempty filename component without "
+            "path separators, a drive prefix or NUL"
         )
 
 
