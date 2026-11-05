@@ -5,15 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scitex_events._emit &mdash; scitex-events 0.1.6 documentation</title>
+  <title>scitex_events._emit &mdash; scitex-events 0.1.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6e0256f3"></script>
+      <script src="../../_static/documentation_options.js?v=22607128"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -79,7 +80,7 @@
 <span class="c1"># Timestamp: 2026-02-14</span>
 <span class="c1"># File: scitex/events/_emit.py</span>
 
-<span class="sd">&quot;&quot;&quot;Event emission: state files and optional webhook delivery.&quot;&quot;&quot;</span>
+<span class="sd">"""Event emission: state files and optional webhook delivery."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -90,10 +91,10 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">scitex_config._ecosystem</span><span class="w"> </span><span class="kn">import</span> <span class="n">local_state</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">._schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">_validate_event_type</span>
 
 <span class="n">_MAX_HISTORY_LINES</span> <span class="o">=</span> <span class="mi">1_000</span>
-<span class="n">_DEFAULT_API_URL</span> <span class="o">=</span> <span class="s2">&quot;https://scitex.ai/api/events/&quot;</span>
+<span class="n">_DEFAULT_API_URL</span> <span class="o">=</span> <span class="s2">"https://scitex.ai/api/events/"</span>
 
 
 <div class="viewcode-block" id="emit">
@@ -101,11 +102,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span>
     <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">project</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"success"</span><span class="p">,</span>
     <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"local"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Event</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Emit an event to state file and optional webhook.</span>
+<span class="w">    </span><span class="sd">"""Emit an event to state file and optional webhook.</span>
 
 <span class="sd">    Always writes to ~/.scitex/events/runtime/{type}_latest.json.</span>
 <span class="sd">    Also appends to ~/.scitex/events/runtime/history.jsonl.</span>
@@ -114,21 +115,22 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    event_type : str</span>
-<span class="sd">        Event type (e.g., &quot;test_complete&quot;).</span>
+<span class="sd">        A nonempty filename component (e.g., "test_complete"); path separators,</span>
+<span class="sd">        drive prefixes and NUL are rejected before state is created.</span>
 <span class="sd">    project : str</span>
 <span class="sd">        Project name.</span>
 <span class="sd">    status : str</span>
-<span class="sd">        &quot;success&quot; or &quot;failure&quot;.</span>
+<span class="sd">        "success" or "failure".</span>
 <span class="sd">    payload : dict, optional</span>
 <span class="sd">        Arbitrary event data.</span>
 <span class="sd">    source : str</span>
-<span class="sd">        Origin: &quot;local&quot;, &quot;hpc&quot;, &quot;ci&quot;.</span>
+<span class="sd">        Origin: "local", "hpc", "ci".</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Event</span>
 <span class="sd">        The emitted event object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span>
         <span class="nb">type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span>
         <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span>
@@ -148,35 +150,38 @@
 <div class="viewcode-block" id="latest">
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.latest">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">latest</span><span class="p">(</span><span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the latest event from state files.</span>
+<span class="w">    </span><span class="sd">"""Read the latest event from state files.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    event_type : str, optional</span>
 <span class="sd">        If given, read the latest event of this type.</span>
-<span class="sd">        If None, read the most recent event across all types.</span>
+<span class="sd">        If None, read the most recent event across all types. Path-shaped types</span>
+<span class="sd">        are rejected before accessing state.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict or None</span>
 <span class="sd">        Event data, or None if no events found.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">event_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_validate_event_type</span><span class="p">(</span><span class="n">event_type</span><span class="p">)</span>
     <span class="n">events_dir</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">events_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">event_type</span><span class="p">:</span>
-        <span class="n">state_file</span> <span class="o">=</span> <span class="n">events_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2">_latest.json&quot;</span>
+        <span class="n">state_file</span> <span class="o">=</span> <span class="n">events_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s2">_latest.json"</span>
         <span class="k">if</span> <span class="n">state_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">state_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">state_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="c1"># Find most recent across all types</span>
     <span class="n">latest_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="n">events_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*_latest.json&quot;</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">events_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*_latest.json"</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">latest_files</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">latest_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">latest_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
@@ -184,7 +189,7 @@
 <div class="viewcode-block" id="history">
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.history">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">history</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read recent events from history file.</span>
+<span class="w">    </span><span class="sd">"""Read recent events from history file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -195,12 +200,12 @@
 <span class="sd">    -------</span>
 <span class="sd">    list of dict</span>
 <span class="sd">        Events in reverse chronological order.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">history_file</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;history.jsonl&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">history_file</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"history.jsonl"</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">history_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="p">[]</span>
 
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">history_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">history_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
     <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="n">limit</span><span class="p">:]):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -215,45 +220,46 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_events_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get runtime events directory (resolved via local_state.runtime_path).&quot;&quot;&quot;</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">local_state</span><span class="o">.</span><span class="n">runtime_path</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Get runtime events directory (resolved via local_state.runtime_path)."""</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">local_state</span><span class="o">.</span><span class="n">runtime_path</span><span class="p">(</span><span class="s2">"events"</span><span class="p">)</span>
     <span class="n">d</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_state_file</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write per-type latest state file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Write per-type latest state file."""</span>
+    <span class="n">_validate_event_type</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
     <span class="n">events_dir</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span>
-    <span class="n">state_file</span> <span class="o">=</span> <span class="n">events_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">_latest.json&quot;</span>
+    <span class="n">state_file</span> <span class="o">=</span> <span class="n">events_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">_latest.json"</span>
     <span class="n">state_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_append_history</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append to history.jsonl with rotation.&quot;&quot;&quot;</span>
-    <span class="n">history_file</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;history.jsonl&quot;</span>
+<span class="w">    </span><span class="sd">"""Append to history.jsonl with rotation."""</span>
+    <span class="n">history_file</span> <span class="o">=</span> <span class="n">_events_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"history.jsonl"</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">history_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">history_file</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Rotate if too large</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="n">history_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">history_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAX_HISTORY_LINES</span><span class="p">:</span>
             <span class="n">trimmed</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="n">_MAX_HISTORY_LINES</span><span class="p">:]</span>
-            <span class="n">history_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">trimmed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">history_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">trimmed</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">pass</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_post_webhook</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;POST event to cloud API if SCITEX_API_KEY is set. Best-effort.&quot;&quot;&quot;</span>
-    <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCITEX_API_KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""POST event to cloud API if SCITEX_API_KEY is set. Best-effort."""</span>
+    <span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCITEX_API_KEY"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="n">api_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SCITEX_API_URL&quot;</span><span class="p">,</span> <span class="n">_DEFAULT_API_URL</span><span class="p">)</span>
+    <span class="n">api_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SCITEX_API_URL"</span><span class="p">,</span> <span class="n">_DEFAULT_API_URL</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
@@ -262,10 +268,10 @@
             <span class="n">api_url</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
             <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">api_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+                <span class="s2">"Authorization"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Bearer </span><span class="si">{</span><span class="n">api_key</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="s2">"Content-Type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">"POST"</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>

@@ -7,6 +7,8 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.8] - 2026-11-05
+
 - Validate event type identifiers before local state reads or writes; reject
   path-shaped values while preserving Unicode and normal dotted names.
 
