@@ -5,15 +5,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>scitex_events._types &mdash; scitex-events 0.1.6 documentation</title>
+  <title>scitex_events._types &mdash; scitex-events 0.1.8 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6e0256f3"></script>
+      <script src="../../_static/documentation_options.js?v=22607128"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -79,32 +80,32 @@
 <span class="c1"># Timestamp: 2026-02-14</span>
 <span class="c1"># File: scitex/events/_types.py</span>
 
-<span class="sd">&quot;&quot;&quot;Known event types for the SciTeX event bus.&quot;&quot;&quot;</span>
+<span class="sd">"""Known event types for the SciTeX event bus."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="n">EVENT_TYPES</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;test_complete&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Test suite completed (local or HPC)&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;payload_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;exit_code&quot;</span><span class="p">,</span> <span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="s2">&quot;log_tail&quot;</span><span class="p">],</span>
+    <span class="s2">"test_complete"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Test suite completed (local or HPC)"</span><span class="p">,</span>
+        <span class="s2">"payload_keys"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"exit_code"</span><span class="p">,</span> <span class="s2">"module"</span><span class="p">,</span> <span class="s2">"log_tail"</span><span class="p">],</span>
     <span class="p">},</span>
-    <span class="s2">&quot;job_done&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;HPC/Slurm job completed&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;payload_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;job_id&quot;</span><span class="p">,</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;state&quot;</span><span class="p">],</span>
+    <span class="s2">"job_done"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"HPC/Slurm job completed"</span><span class="p">,</span>
+        <span class="s2">"payload_keys"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"job_id"</span><span class="p">,</span> <span class="s2">"host"</span><span class="p">,</span> <span class="s2">"state"</span><span class="p">],</span>
     <span class="p">},</span>
-    <span class="s2">&quot;build_result&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;LaTeX manuscript build completed&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;payload_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;doc_type&quot;</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;errors&quot;</span><span class="p">],</span>
+    <span class="s2">"build_result"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"LaTeX manuscript build completed"</span><span class="p">,</span>
+        <span class="s2">"payload_keys"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"doc_type"</span><span class="p">,</span> <span class="s2">"success"</span><span class="p">,</span> <span class="s2">"errors"</span><span class="p">],</span>
     <span class="p">},</span>
-    <span class="s2">&quot;scholar_done&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Scholar paper fetch/enrichment completed&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;payload_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">],</span>
+    <span class="s2">"scholar_done"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Scholar paper fetch/enrichment completed"</span><span class="p">,</span>
+        <span class="s2">"payload_keys"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"count"</span><span class="p">,</span> <span class="s2">"failed"</span><span class="p">,</span> <span class="s2">"project"</span><span class="p">],</span>
     <span class="p">},</span>
-    <span class="s2">&quot;stats_done&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Long-running statistical computation completed&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;payload_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;test_name&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">],</span>
+    <span class="s2">"stats_done"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Long-running statistical computation completed"</span><span class="p">,</span>
+        <span class="s2">"payload_keys"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"test_name"</span><span class="p">,</span> <span class="s2">"p_value"</span><span class="p">,</span> <span class="s2">"duration"</span><span class="p">],</span>
     <span class="p">},</span>
 <span class="p">}</span>
 
@@ -112,7 +113,7 @@
 <div class="viewcode-block" id="list_types">
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.list_types">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list of known event type names.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return list of known event type names."""</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">EVENT_TYPES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 
@@ -120,7 +121,7 @@
 <div class="viewcode-block" id="get_type_info">
 <a class="viewcode-back" href="../../api/scitex_events.html#scitex_events.get_type_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_type_info</span><span class="p">(</span><span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return metadata for an event type, or empty dict if unknown.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return metadata for an event type, or empty dict if unknown."""</span>
     <span class="k">return</span> <span class="n">EVENT_TYPES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="p">{})</span></div>
 
 
